@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -36,26 +38,26 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponse getUser(@PathVariable(value = "id") Long id) {
+    public UserResponse getUser(@PathVariable(value = "id") BigInteger id) {
         return userService.getUser(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponse put(@PathVariable(value = "id") Long id, @Valid @RequestBody UserRequest userRequest) {
+    public UserResponse put(@PathVariable(value = "id") BigInteger id, @Valid @RequestBody UserRequest userRequest) {
         return userService.put(id, userRequest);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/merge-patch+json")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponse patch(@PathVariable(value = "id") Long id,
+    public UserResponse patch(@PathVariable(value = "id") BigInteger id,
                               @RequestBody JsonMergePatch jsonMergePatch) {
         return userService.patch(id, jsonMergePatch);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(value = "id") Long id) {
+    public void delete(@PathVariable(value = "id") BigInteger id) {
         userService.deleteUser(id);
     }
 

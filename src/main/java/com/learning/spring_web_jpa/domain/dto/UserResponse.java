@@ -2,9 +2,10 @@ package com.learning.spring_web_jpa.domain.dto;
 
 import com.learning.spring_web_jpa.domain.enums.Gender;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
-public record UserResponse(Long id,
+public record UserResponse(BigInteger id,
                            Long version,
                            String firstName,
                            String lastName,

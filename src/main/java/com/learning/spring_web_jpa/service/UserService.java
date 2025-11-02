@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.math.BigInteger;
 import java.util.Objects;
 
 @Service
@@ -53,12 +54,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse getUser(Long id) {
+    public UserResponse getUser(BigInteger id) {
         return userRepository.fetchUserById(id)
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    public UserResponse put(Long id, UserRequest userRequest) {
+    public UserResponse put(BigInteger id, UserRequest userRequest) {
         var userEntity = transactionTemplate.execute(transactionStatus ->
                 userRepository.findById(id).stream()
                 .map(managedUserEntity -> {
@@ -80,7 +81,7 @@ public class UserService {
         return UserMapper.INSTANCE.toUserResponse(userEntity);
     }
 
-    public UserResponse patch(Long id, JsonMergePatch patch) {
+    public UserResponse patch(BigInteger id, JsonMergePatch patch) {
         var updatedUserEntity = transactionTemplate.execute(transactionStatus -> {
             var userEntity = userRepository.findById(id)
                     .orElseThrow(UserNotFoundException::new);
@@ -97,9 +98,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id) {
-        var user = userRepository.findById(id)
-                        .orElseThrow(UserNotFoundException::new);
-        userRepository.delete(user);
+    public void deleteUser(BigInteger id) {
+        var entity = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        userRepository.delete(entity);
     }
+
 }

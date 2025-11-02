@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, BigInteger> {
 
     @Query("""
             select new com.learning.spring_web_jpa.domain.dto.UserResponse(
@@ -27,7 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             from User u
             where u.id = :id
             """)
-    Optional<UserResponse> fetchUserById(@Param("id") Long id);
+    Optional<UserResponse> fetchUserById(@Param("id") BigInteger id);
 
     @Query("""
             select new com.learning.spring_web_jpa.domain.dto.UserResponse(

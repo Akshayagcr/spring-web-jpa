@@ -4,10 +4,9 @@ import com.learning.spring_web_jpa.domain.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Generated;
-import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+import org.hibernate.annotations.GeneratedColumn;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 @Entity
@@ -19,13 +18,8 @@ import java.sql.Timestamp;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_seq_gen")
-    @SequenceGenerator(
-            name = "app_user_seq_gen",
-            sequenceName = "app_user_id_seq", // existing sequence created by SERIAL
-            allocationSize = 1                // must match sequence increment in DB
-    )
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
 
     @Version
     private Long version;
@@ -39,8 +33,8 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "gender")
-    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(name = "gender", columnDefinition = "ENUM('MALE', 'FEMALE', 'OTHER')")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(name = "city")
@@ -49,11 +43,16 @@ public class User {
     @Column(name = "country")
     private String country;
 
-    @Generated(GenerationTime.INSERT)   // DB Generated. Use @CreationTimestamp for Hibernate generated timestamp.
+    /*
+        INSERT ... RETURNING SQL statement is not supported in MySQL. Postgres supports it.
+        So when creating user will get null in response for field createdAt & updatedAt.
+        To fetch createdAt & updatedAt we need to make additional select query or use @GeneratedColumn
+     */
     @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
+    @GeneratedColumn(value = "INSERT")
     private Timestamp createdAt;
 
-    @UpdateTimestamp    // Hibernate generated. If we need DB managed then we need a DB trigger
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false, nullable = false)
+    @GeneratedColumn(value = "ALWAYS")
     private Timestamp updatedAt;
 }
