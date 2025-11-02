@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+
+  swagger-ui:
+    image: docker.swagger.io/swaggerapi/swagger-editor
+    restart: always
+    ports:
+      - 80:8080
